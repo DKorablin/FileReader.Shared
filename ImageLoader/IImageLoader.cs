@@ -2,36 +2,36 @@
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Загрузчик PE файла</summary>
+	/// <summary>PE file loader interface</summary>
 	public interface IImageLoader : IDisposable
 	{
-		/// <summary>Модуль загружен в память. Все RVA адреса переписаны в VA.</summary>
+		/// <summary>Module loaded in memory. All RVA rewritten to VA</summary>
 		Boolean IsModuleMapped { get; }
 
-		/// <summary>Базовый адрес загруженного модуля в память</summary>
+		/// <summary>Module base address in memory</summary>
 		Int64 BaseAddress { get; }
 
-		/// <summary>Источник получения PE файла</summary>
+		/// <summary>Source from laoded PE file</summary>
 		String Source { get; }
 
 		/// <summary>Required endianness</summary>
 		EndianHelper.Endian Endianness { get; set; }
 
-		/// <summary>Получить структуру с определённого отступа</summary>
-		/// <typeparam name="T">Структура</typeparam>
-		/// <param name="padding">Отступ от начала файла или RVA</param>
-		/// <returns>Прочитанная структура</returns>
+		/// <summary>Gets structure from specific offset</summary>
+		/// <typeparam name="T">Structure type</typeparam>
+		/// <param name="padding">Offest from beginig of a file or RVA</param>
+		/// <returns>Structure from specified offset</returns>
 		T PtrToStructure<T>(UInt32 padding) where T : struct;
 
-		/// <summary>Получить массив байт с начала отступа</summary>
-		/// <param name="padding">Отступ от начала файла или RVA</param>
-		/// <param name="length">Читаемый размер</param>
-		/// <returns>Получить массив байт с отступа</returns>
+		/// <summary>Gets byte array from beggining of the offset</summary>
+		/// <param name="padding">Offset from beggining of a file or RVA</param>
+		/// <param name="length">Required length</param>
+		/// <returns>Byte array from offset and required length</returns>
 		Byte[] ReadBytes(UInt32 padding, UInt32 length);
 
-		/// <summary>Получить строку с отпределённого отступа</summary>
-		/// <param name="padding">Отступ от начала файла или RVA</param>
-		/// <returns>Прочитанная строка</returns>
+		/// <summary>Gets string from fixed offset</summary>
+		/// <param name="padding">Offset from beggining of a file or RVA</param>
+		/// <returns>String from the offset</returns>
 		String PtrToStringAnsi(UInt32 padding);
 	}
 }
