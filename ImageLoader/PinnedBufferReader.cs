@@ -42,10 +42,10 @@ namespace AlphaOmega.Debug
 			this._gcPointer = this._gcHandle.AddrOfPinnedObject();
 		}
 
-		/// <summary>Накладывание структуры на массив байт и увеличивание отступа на размер массива</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="padding">Отступ от начала массива байт и отступ от начала массива + конца структуры</param>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <summary>Overlaying a structure into an array of bytes and increasing the indentation by the size of array</summary>
+		/// <typeparam name="T">Mapped structure type</typeparam>
+		/// <param name="padding">Indent from the beginning of the byte array and indent from the beginning of the array + end of the structure</param>
+		/// <returns>Mapped structure with data</returns>
 		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(ref UInt32 padding) where T : struct
 		{
@@ -55,10 +55,10 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Накладывание структуры на массив байт</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="padding">Отступ от начала массива байт</param>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <summary>Overlaying structure into an array of bytes</summary>
+		/// <typeparam name="T">Mapped structure type</typeparam>
+		/// <param name="padding">Indent from the beginnning of the byte array</param>
+		/// <returns>Mapped structure with data</returns>
 		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(UInt32 padding) where T : struct
 		{
@@ -66,18 +66,18 @@ namespace AlphaOmega.Debug
 			return this.BytesToStructure<T>(padding, out length);
 		}
 
-		/// <summary>Накладывание структуры на массив байт</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="padding">Отступ от начала массива байт</param>
-		/// <param name="length">Размер полчившегося массива</param>
+		/// <summary>Overlaying structure into an array of bytes</summary>
+		/// <typeparam name="T">Mapped structure type</typeparam>
+		/// <param name="padding">Indent from the beginning of the byte array</param>
+		/// <param name="length">Size of the resulting array</param>
 		/// <exception cref="T:ArgumentOutOfRangeException">padding+structure size is out of range of byte array</exception>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <returns>Mapped structure with data</returns>
 		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(UInt32 padding, out Int32 length) where T : struct
 		{
 			length = Marshal.SizeOf(typeof(T));
 			if(length + padding > this.Buffer.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			return (T)this.BytesToStructureI(padding, typeof(T));
 		}
@@ -114,18 +114,18 @@ namespace AlphaOmega.Debug
 			return Marshal.PtrToStructure(ptr, structType);
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="padding">Отступ от начала массива</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Converts byte array to string from indent</summary>
+		/// <param name="padding">Indent from the beginning of array</param>
+		/// <returns>Result string</returns>
 		public String BytesToStringUni(UInt32 padding)
 		{
 			Int32 length;
 			return this.BytesToStringUni(padding, out length);
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="padding">Отступ от начала массива, который после возврата станет отступом от конца строки</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Converts byte array from indent to string</summary>
+		/// <param name="padding">Indent from the beginning of the byte array, whose after reading will be cursor location at the end of a string</param>
+		/// <returns>Result string</returns>
 		public String BytesToStringUni(ref UInt32 padding)
 		{
 			Int32 length;
@@ -134,15 +134,15 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="padding">Отступ от начала массива</param>
-		/// <param name="length">Результатирующий размер строки</param>
+		/// <summary>Converts byte array from indent to string</summary>
+		/// <param name="padding">Indent from the beginning if the byte array</param>
+		/// <param name="length">Result string length</param>
 		/// <exception cref="T:ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
-		/// <returns>Получаемая строка</returns>
+		/// <returns>Result string</returns>
 		public String BytesToStringUni(UInt32 padding, out Int32 length)
 		{
 			if(padding > this.Buffer.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			IntPtr ptr = padding == 0
 				? this.Handle
@@ -153,9 +153,9 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="padding">Отступ от начала массива</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Convets byte array to string</summary>
+		/// <param name="padding">Indent from the beginning of the array</param>
+		/// <returns>Result string</returns>
 		public String BytesToStringAnsi(UInt32 padding)
 		{
 			Int32 length;
@@ -181,7 +181,7 @@ namespace AlphaOmega.Debug
 		public String BytesToStringAnsi(UInt32 padding, out Int32 length)
 		{
 			if(padding > this.Buffer.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			IntPtr ptr = padding == 0
 				? this.Handle
@@ -200,18 +200,18 @@ namespace AlphaOmega.Debug
 		public Byte[] GetBytes(UInt32 padding, UInt32 length)
 		{
 			if(padding + length > this.Buffer.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			Byte[] result = new Byte[length];
 			Array.Copy(this.Buffer, padding, result, 0, result.Length);
 			return result;
 		}
 
-		/// <summary>Накладывание структуры на массив байт и увеличивание отступа на размер массива</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="buffer">Массив байт на который наложить структуру</param>
-		/// <param name="padding">Отступ от начала массива байт и отступ от начала массива + конца структуры</param>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <summary>Overlaying a structure into an array of bytes and increasing the indentation by the size of the array</summary>
+		/// <typeparam name="T">Overlay structure type</typeparam>
+		/// <param name="buffer">An arry of bytes to apply the structure</param>
+		/// <param name="padding">Indent from the beginning of the byte array and indent from the beginning of the array + end of the structure</param>
+		/// <returns>Overlay structure with data</returns>
 		public static T BytesToStructure<T>(Byte[] buffer, ref UInt32 padding) where T : struct
 		{
 			Int32 length;
@@ -220,55 +220,55 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Накладывание структуры на массив байт</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="buffer">Массив байт на который наложить структуру</param>
-		/// <param name="padding">Отступ от начала массива байт</param>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <summary>Overlaying a structure into an array of bytes</summary>
+		/// <typeparam name="T">Overlay structure type</typeparam>
+		/// <param name="buffer">An array of bytes to apply the structure</param>
+		/// <param name="padding">Indent from the beginning of array</param>
+		/// <returns>Overlay structure with data</returns>
 		public static T BytesToStructure<T>(Byte[] buffer, UInt32 padding) where T : struct
 		{
 			Int32 length;
 			return PinnedBufferReader.BytesToStructure<T>(buffer, padding, out length);
 		}
 
-		/// <summary>Накладывание структуры на массив байт</summary>
-		/// <typeparam name="T">Тип накладываемой структуры</typeparam>
-		/// <param name="buffer">Массив байт на который наложить структуру</param>
-		/// <param name="padding">Отступ от начала массива байт</param>
-		/// <param name="length">Размер полчившегося массива</param>
-		/// <returns>Наложенная структура с данными</returns>
+		/// <summary>Overlaying a structure into an array of bytes</summary>
+		/// <typeparam name="T">Overlay structure type</typeparam>
+		/// <param name="buffer">An array of bytes to apply the structure</param>
+		/// <param name="padding">Indent from the beginning of array</param>
+		/// <param name="length">The size of the resulting array</param>
+		/// <returns>Overlay structure with data</returns>
 		public static T BytesToStructure<T>(Byte[] buffer, UInt32 padding, out Int32 length) where T : struct
 		{
 			using(PinnedBufferReader reader = new PinnedBufferReader(buffer))
 				return reader.BytesToStructure<T>(padding, out length);
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="buffer">Массив байт</param>
-		/// <param name="padding">Отступ от начала массива</param>
-		/// <param name="length">Результатирующий размер строки</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Convert byte array from indent to string</summary>
+		/// <param name="buffer">Convert byte array from indent to string</param>
+		/// <param name="padding">Indent from the beginning of array</param>
+		/// <param name="length">The size of the resulting array</param>
+		/// <returns>Result string</returns>
 		public static String BytesToStringUni(Byte[] buffer, UInt32 padding, out Int32 length)
 		{
 			using(PinnedBufferReader reader = new PinnedBufferReader(buffer))
 				return reader.BytesToStringUni(padding, out length);
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="buffer">Массив байт</param>
-		/// <param name="padding">Отступ от начала массива</param>
-		/// <param name="length">Результатирующий размер строки</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Convert byte array from indent to string</summary>
+		/// <param name="buffer">Byte array</param>
+		/// <param name="padding">Offset from the beginning of the array</param>
+		/// <param name="length">Resulting string size</param>
+		/// <returns>Result string</returns>
 		public static String BytesToStringAnsi(Byte[] buffer, UInt32 padding, out Int32 length)
 		{
 			using(PinnedBufferReader reader = new PinnedBufferReader(buffer))
 				return reader.BytesToStringAnsi(padding, out length);
 		}
 
-		/// <summary>Преобразование структуры из памяти в массив байт</summary>
-		/// <typeparam name="T">Структура, которую необходимо преобразовать</typeparam>
-		/// <param name="structure">Структура для преобразования</param>
-		/// <returns>Массив байт</returns>
+		/// <summary>Converting a structure from memory to an array of bytes</summary>
+		/// <typeparam name="T">Structure to be converted</typeparam>
+		/// <param name="structure">Structure to transform</param>
+		/// <returns>Byte array</returns>
 		public static Byte[] StructureToArray<T>(T structure) where T : struct
 		{
 			Int32 length = Marshal.SizeOf(structure);

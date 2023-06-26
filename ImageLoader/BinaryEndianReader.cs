@@ -30,7 +30,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads decimal and swap bytes if needed</summary>
-		/// <returns>Decimal</returns>
+		/// <returns>Swapped decimal value</returns>
 		public override Decimal ReadDecimal()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Decimal));
@@ -44,7 +44,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads double and swap bytes if needed</summary>
-		/// <returns>Double</returns>
+		/// <returns>Double value</returns>
 		public override Double ReadDouble()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Double));
@@ -54,7 +54,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads Int16 and swap bytes if needed</summary>
-		/// <returns>Int16</returns>
+		/// <returns>Int16 value</returns>
 		public override Int16 ReadInt16()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Int16));
@@ -64,7 +64,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads Int32 and swap bytes if needed</summary>
-		/// <returns>Int32</returns>
+		/// <returns>Int32 value</returns>
 		public override Int32 ReadInt32()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Int32));
@@ -74,7 +74,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads Int64 and swap bytes if needed</summary>
-		/// <returns>Int64</returns>
+		/// <returns>Int64 value</returns>
 		public override Int64 ReadInt64()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Int64));
@@ -84,7 +84,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads Single and swap bytes if needed</summary>
-		/// <returns>Single</returns>
+		/// <returns>Single value</returns>
 		public override Single ReadSingle()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(Single));
@@ -94,7 +94,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads unsigned Int16 and swap bytes if needed</summary>
-		/// <returns>UInt16</returns>
+		/// <returns>UInt16 value</returns>
 		public override UInt16 ReadUInt16()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(UInt16));
@@ -104,7 +104,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads unsigned Int32 and swap bytes if needed</summary>
-		/// <returns>UInt32</returns>
+		/// <returns>UInt32 value</returns>
 		public override UInt32 ReadUInt32()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(UInt32));
@@ -114,7 +114,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads unsigned Int64 and swap bytes if needed</summary>
-		/// <returns>UInt64</returns>
+		/// <returns>UInt64 value</returns>
 		public override UInt64 ReadUInt64()
 		{
 			Byte[] bytes = base.ReadBytes(sizeof(UInt64));

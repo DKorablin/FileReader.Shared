@@ -40,12 +40,15 @@ namespace AlphaOmega.Debug
 		{
 			if(input == null)
 				throw new ArgumentNullException(nameof(input));
+<<<<<<< HEAD
 			if(String.IsNullOrEmpty(source))
 				throw new ArgumentNullException(nameof(source));
+=======
+>>>>>>> 4f5b21eda5d9e91271061ee33da47afcb18f2e5a
 			if(!input.CanSeek || !input.CanRead)
 				throw new ArgumentException("The stream does not support reading and/or seeking", nameof(input));
 
-			this.Source = source;
+			this.Source = source ?? throw new ArgumentNullException(nameof(source));
 			this._reader = new BinaryReader(input);
 		}
 
@@ -59,7 +62,11 @@ namespace AlphaOmega.Debug
 			if(String.IsNullOrEmpty(filePath))
 				throw new ArgumentNullException(nameof(filePath));
 			else if(!File.Exists(filePath))
+<<<<<<< HEAD
 				throw new FileNotFoundException($"File {filePath} not found", filePath);
+=======
+				throw new FileNotFoundException("File not found", filePath);
+>>>>>>> 4f5b21eda5d9e91271061ee33da47afcb18f2e5a
 
 			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			return new StreamLoader(stream, filePath);
@@ -100,7 +107,6 @@ namespace AlphaOmega.Debug
 		public virtual T PtrToStructure<T>(UInt32 padding) where T : struct
 		{
 			Byte[] bytes = this.ReadBytes(padding, (UInt32)Marshal.SizeOf(typeof(T)));
-
 			EndianHelper.AdjustEndianness(typeof(T), bytes, this.Endianness);
 
 			GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
