@@ -11,9 +11,6 @@ namespace AlphaOmega.Debug
 		/// <summary>Module base address in memory</summary>
 		Int64 BaseAddress { get; }
 
-		/// <summary>Source from laoded PE file</summary>
-		String Source { get; }
-
 		/// <summary>Required endianness</summary>
 		EndianHelper.Endian Endianness { get; set; }
 
