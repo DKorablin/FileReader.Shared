@@ -9,8 +9,6 @@ using System.Text;
 namespace AlphaOmega.Debug
 {
 	/// <summary>Image loader from file or stream</summary>
-	[DefaultProperty("Source")]
-	[DebuggerDisplay("Source={Source}")]
 	public class StreamLoader : IDisposable, IImageLoader
 	{
 		private BinaryReader _reader;
