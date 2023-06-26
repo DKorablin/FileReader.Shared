@@ -27,7 +27,6 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read image from stream</summary>
 		/// <param name="input">Stream with image</param>
-		/// <param name="source">Source of image</param>
 		/// <exception cref="T:ArgumentNullException">input stream is null</exception>
 		/// <exception cref="T:ArgumentNullException">souce is null</exception>
 		/// <exception cref="T:ArgumentException">stream must be seakable and readable</exception>
