@@ -78,7 +78,7 @@ namespace AlphaOmega.Debug
 		private static String GetFileUniqueName(String path, String extension, UInt32 index)
 		{
 			String filePath = index > 0
-				? String.Format("{0}[{1}]{2}", path, index, extension)
+				? $"{path}[{index}]{extension}"
 				: path + extension;
 
 			return File.Exists(filePath)

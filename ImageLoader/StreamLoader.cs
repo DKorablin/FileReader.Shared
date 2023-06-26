@@ -39,11 +39,11 @@ namespace AlphaOmega.Debug
 		public StreamLoader(Stream input, String source)
 		{
 			if(input == null)
-				throw new ArgumentNullException("input");
+				throw new ArgumentNullException(nameof(input));
 			if(String.IsNullOrEmpty(source))
-				throw new ArgumentNullException("source");
+				throw new ArgumentNullException(nameof(source));
 			if(!input.CanSeek || !input.CanRead)
-				throw new ArgumentException("The stream does not support reading and/or seeking");
+				throw new ArgumentException("The stream does not support reading and/or seeking", nameof(input));
 
 			this.Source = source;
 			this._reader = new BinaryReader(input);
@@ -57,9 +57,9 @@ namespace AlphaOmega.Debug
 		public static StreamLoader FromFile(String filePath)
 		{
 			if(String.IsNullOrEmpty(filePath))
-				throw new ArgumentNullException("filePath");
+				throw new ArgumentNullException(nameof(filePath));
 			else if(!File.Exists(filePath))
-				throw new FileNotFoundException(String.Format("File {0} not found", filePath));
+				throw new FileNotFoundException($"File {filePath} not found", filePath);
 
 			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			return new StreamLoader(stream, filePath);
@@ -72,7 +72,7 @@ namespace AlphaOmega.Debug
 		public static StreamLoader FromMemory(Byte[] input, String sourceName)
 		{
 			if(input == null || input.Length == 0)
-				throw new ArgumentNullException("input");
+				throw new ArgumentNullException(nameof(input));
 
 			MemoryStream stream = new MemoryStream(input, false);
 			return new StreamLoader(stream, sourceName);
@@ -87,7 +87,7 @@ namespace AlphaOmega.Debug
 		{
 			Stream stream = this.Reader.BaseStream;
 			if(padding + length > stream.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
 			return this.Reader.ReadBytes((Int32)length);
@@ -122,7 +122,7 @@ namespace AlphaOmega.Debug
 		{
 			Stream stream = this.Reader.BaseStream;
 			if(padding > stream.Length)
-				throw new ArgumentOutOfRangeException("padding");
+				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
 			List<Byte> result = new List<Byte>();
