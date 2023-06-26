@@ -35,8 +35,6 @@ namespace AlphaOmega.Debug
 		{
 			if(input == null)
 				throw new ArgumentNullException(nameof(input));
-			if(String.IsNullOrEmpty(source))
-				throw new ArgumentNullException(nameof(source));
 
 			if(!input.CanSeek || !input.CanRead)
 				throw new ArgumentException("The stream does not support reading and/or seeking", nameof(input));
