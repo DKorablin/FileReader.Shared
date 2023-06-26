@@ -9,8 +9,6 @@ using System.Text;
 namespace AlphaOmega.Debug
 {
 	/// <summary>Image loader from file or stream</summary>
-	[DefaultProperty("Source")]
-	[DebuggerDisplay("Source={Source}")]
 	public class StreamLoader : IDisposable, IImageLoader
 	{
 		private BinaryReader _reader;
@@ -24,9 +22,6 @@ namespace AlphaOmega.Debug
 		/// <summary>Base PE file address</summary>
 		public Int64 BaseAddress { get { return 0; } }
 
-		/// <summary>Image source</summary>
-		public String Source { get; private set; }
-
 		/// <summary>Required endianness</summary>
 		public EndianHelper.Endian Endianness { get; set; }
 
@@ -36,7 +31,7 @@ namespace AlphaOmega.Debug
 		/// <exception cref="T:ArgumentNullException">input stream is null</exception>
 		/// <exception cref="T:ArgumentNullException">souce is null</exception>
 		/// <exception cref="T:ArgumentException">stream must be seakable and readable</exception>
-		public StreamLoader(Stream input, String source)
+		public StreamLoader(Stream input)
 		{
 			if(input == null)
 				throw new ArgumentNullException(nameof(input));
@@ -46,7 +41,6 @@ namespace AlphaOmega.Debug
 			if(!input.CanSeek || !input.CanRead)
 				throw new ArgumentException("The stream does not support reading and/or seeking", nameof(input));
 
-			this.Source = source ?? throw new ArgumentNullException(nameof(source));
 			this._reader = new BinaryReader(input);
 		}
 
@@ -64,7 +58,7 @@ namespace AlphaOmega.Debug
 				throw new FileNotFoundException("File not found", filePath);
 
 			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			return new StreamLoader(stream, filePath);
+			return new StreamLoader(stream);
 		}
 
 		/// <summary>Read PE image from memory</summary>
@@ -77,7 +71,7 @@ namespace AlphaOmega.Debug
 				throw new ArgumentNullException(nameof(input));
 
 			MemoryStream stream = new MemoryStream(input, false);
-			return new StreamLoader(stream, sourceName);
+			return new StreamLoader(stream);
 		}
 
 		/// <summary>Get bytes from specific padding and specific length</summary>

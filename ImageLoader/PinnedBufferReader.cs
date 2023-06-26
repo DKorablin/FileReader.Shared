@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 
 namespace AlphaOmega.Debug
 {
@@ -32,7 +31,6 @@ namespace AlphaOmega.Debug
 		
 		/// <summary>Create instance of bytesreader class</summary>
 		/// <param name="buffer">Buffer</param>
-		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public PinnedBufferReader(Byte[] buffer)
 		{
 			this._buffer = buffer;
@@ -46,7 +44,6 @@ namespace AlphaOmega.Debug
 		/// <typeparam name="T">Mapped structure type</typeparam>
 		/// <param name="padding">Indent from the beginning of the byte array and indent from the beginning of the array + end of the structure</param>
 		/// <returns>Mapped structure with data</returns>
-		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(ref UInt32 padding) where T : struct
 		{
 			Int32 length;
@@ -59,7 +56,6 @@ namespace AlphaOmega.Debug
 		/// <typeparam name="T">Mapped structure type</typeparam>
 		/// <param name="padding">Indent from the beginnning of the byte array</param>
 		/// <returns>Mapped structure with data</returns>
-		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(UInt32 padding) where T : struct
 		{
 			Int32 length;
@@ -72,7 +68,6 @@ namespace AlphaOmega.Debug
 		/// <param name="length">Size of the resulting array</param>
 		/// <exception cref="T:ArgumentOutOfRangeException">padding+structure size is out of range of byte array</exception>
 		/// <returns>Mapped structure with data</returns>
-		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		public T BytesToStructure<T>(UInt32 padding, out Int32 length) where T : struct
 		{
 			length = Marshal.SizeOf(typeof(T));
@@ -104,7 +99,6 @@ namespace AlphaOmega.Debug
 			}
 		}
 
-		[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
 		private Object BytesToStructureI(UInt32 padding, Type structType)
 		{
 			IntPtr ptr = padding == 0
