@@ -66,7 +66,7 @@ namespace AlphaOmega.Debug
 		/// <typeparam name="T">Mapped structure type</typeparam>
 		/// <param name="padding">Indent from the beginning of the byte array</param>
 		/// <param name="length">Size of the resulting array</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">padding+structure size is out of range of byte array</exception>
+		/// <exception cref="ArgumentOutOfRangeException">padding+structure size is out of range of byte array</exception>
 		/// <returns>Mapped structure with data</returns>
 		public T BytesToStructure<T>(UInt32 padding, out Int32 length) where T : struct
 		{
@@ -131,7 +131,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Converts byte array from indent to string</summary>
 		/// <param name="padding">Indent from the beginning if the byte array</param>
 		/// <param name="length">Result string length</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
 		/// <returns>Result string</returns>
 		public String BytesToStringUni(UInt32 padding, out Int32 length)
 		{
@@ -170,7 +170,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Преобразование массива байт от отступа в строку</summary>
 		/// <param name="padding">Offset from the beginning of the array</param>
 		/// <param name="length">Результатирующий размер строки</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
 		/// <returns>Получаемая строка</returns>
 		public String BytesToStringAnsi(UInt32 padding, out Int32 length)
 		{
@@ -189,7 +189,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Get bytes from data</summary>
 		/// <param name="padding">Offset from the beginning of the array</param>
 		/// <param name="length">Length</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">index>Index and length is larger than bytes array length</exception>
+		/// <exception cref="ArgumentOutOfRangeException">index>Index and length is larger than bytes array length</exception>
 		/// <returns>Bytes from index</returns>
 		public Byte[] GetBytes(UInt32 padding, UInt32 length)
 		{

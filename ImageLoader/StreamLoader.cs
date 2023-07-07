@@ -27,13 +27,12 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read image from stream</summary>
 		/// <param name="input">Stream with image</param>
-		/// <exception cref="T:ArgumentNullException">input stream is null</exception>
-		/// <exception cref="T:ArgumentNullException">souce is null</exception>
-		/// <exception cref="T:ArgumentException">stream must be seakable and readable</exception>
+		/// <exception cref="ArgumentNullException">input stream is null</exception>
+		/// <exception cref="ArgumentNullException">souce is null</exception>
+		/// <exception cref="ArgumentException">stream must be seakable and readable</exception>
 		public StreamLoader(Stream input)
 		{
-			if(input == null)
-				throw new ArgumentNullException(nameof(input));
+			_ = input ?? throw new ArgumentNullException(nameof(input));
 
 			if(!input.CanSeek || !input.CanRead)
 				throw new ArgumentException("The stream does not support reading and/or seeking", nameof(input));
@@ -43,15 +42,14 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read PE image from file</summary>
 		/// <param name="filePath">Path to the file</param>
-		/// <exception cref="T:ArgumentNullException">filePath is null or empty string</exception>
-		/// <exception cref="T:FileNotFoundException">file not found</exception>
+		/// <exception cref="ArgumentNullException">filePath is null or empty string</exception>
+		/// <exception cref="FileNotFoundException">file not found</exception>
 		/// <returns>PE loader</returns>
 		public static StreamLoader FromFile(String filePath)
 		{
 			if(String.IsNullOrEmpty(filePath))
 				throw new ArgumentNullException(nameof(filePath));
 			else if(!File.Exists(filePath))
-
 				throw new FileNotFoundException("File not found", filePath);
 
 			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -74,7 +72,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Get bytes from specific padding and specific length</summary>
 		/// <param name="padding">Padding from the beginning of the image</param>
 		/// <param name="length">Length of bytes to read</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">padding + length more than size of image</exception>
+		/// <exception cref="ArgumentOutOfRangeException">padding + length more than size of image</exception>
 		/// <returns>Readed bytes</returns>
 		public virtual Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
@@ -108,7 +106,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Get ACSII string from specific padding from the beginning of the image</summary>
 		/// <param name="padding">Padding from the beginning of the image</param>
-		/// <exception cref="T:ArgumentOutOfRangeException">padding more than size of image</exception>
+		/// <exception cref="ArgumentOutOfRangeException">padding more than size of image</exception>
 		/// <returns>String from pointer</returns>
 		public virtual String PtrToStringAnsi(UInt32 padding)
 		{
