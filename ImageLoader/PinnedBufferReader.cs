@@ -9,24 +9,18 @@ namespace AlphaOmega.Debug
 	public class PinnedBufferReader : IDisposable
 	{
 		#region Fields
-		private GCHandle _gcHandle;
-		private IntPtr _gcPointer;
+		private readonly GCHandle _gcHandle;
+		private readonly IntPtr _gcPointer;//Allocated handle
 		private readonly Byte[] _buffer;
 		#endregion Fields
 		#region Properties
-		/// <summary>Bytes array</summary>
-		private Byte[] Buffer { get { return this._buffer; } }
-		
-		/// <summary>Allocated handle</summary>
-		private IntPtr Handle { get { return this._gcPointer; } }
-		
 		/// <summary>Read byte from buffer</summary>
 		/// <param name="index">Index in the buffer array</param>
 		/// <returns>One byte from the buffer</returns>
-		public Byte this[UInt32 index] { get { return this.Buffer[index]; } }
+		public Byte this[UInt32 index] { get { return this._buffer[index]; } }
 
 		/// <summary>Length of the buffer</summary>
-		public Int32 Length { get { return this.Buffer.Length; } }
+		public Int32 Length { get { return this._buffer.Length; } }
 		#endregion Properties
 		
 		/// <summary>Create instance of bytesreader class</summary>
@@ -71,7 +65,7 @@ namespace AlphaOmega.Debug
 		public T BytesToStructure<T>(UInt32 padding, out Int32 length) where T : struct
 		{
 			length = Marshal.SizeOf(typeof(T));
-			if(length + padding > this.Buffer.Length)
+			if(length + padding > this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			return (T)this.BytesToStructureI(padding, typeof(T));
@@ -88,7 +82,7 @@ namespace AlphaOmega.Debug
 		{
 			UInt32 structLength = (UInt32)Marshal.SizeOf(structType);
 			Byte[] bytes = new Byte[structLength > dataLength ? structLength : dataLength];//Если брать массив меньше чем структура, то в хвост структуры запишется мусор
-			Array.Copy(this.Buffer, padding, bytes, 0, dataLength);
+			Array.Copy(this._buffer, padding, bytes, 0, dataLength);
 			
 			using(PinnedBufferReader reader = new PinnedBufferReader(bytes))
 			{
@@ -102,8 +96,8 @@ namespace AlphaOmega.Debug
 		private Object BytesToStructureI(UInt32 padding, Type structType)
 		{
 			IntPtr ptr = padding == 0
-				? this.Handle
-				: new IntPtr(this.Handle.ToInt64() + padding);
+				? this._gcPointer
+				: new IntPtr(this._gcPointer.ToInt64() + padding);
 
 			return Marshal.PtrToStructure(ptr, structType);
 		}
@@ -135,12 +129,12 @@ namespace AlphaOmega.Debug
 		/// <returns>Result string</returns>
 		public String BytesToStringUni(UInt32 padding, out Int32 length)
 		{
-			if(padding > this.Buffer.Length)
+			if(padding > this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			IntPtr ptr = padding == 0
-				? this.Handle
-				: new IntPtr(this.Handle.ToInt64() + padding);
+				? this._gcPointer
+				: new IntPtr(this._gcPointer.ToInt64() + padding);
 
 			String result = Marshal.PtrToStringUni(ptr);
 			length = (result.Length + 1) * Marshal.SystemDefaultCharSize;
@@ -174,12 +168,12 @@ namespace AlphaOmega.Debug
 		/// <returns>Получаемая строка</returns>
 		public String BytesToStringAnsi(UInt32 padding, out Int32 length)
 		{
-			if(padding > this.Buffer.Length)
+			if(padding > this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			IntPtr ptr = padding == 0
-				? this.Handle
-				: new IntPtr(this.Handle.ToInt64() + padding);
+				? this._gcPointer
+				: new IntPtr(this._gcPointer.ToInt64() + padding);
 
 			String result = Marshal.PtrToStringAnsi(ptr);
 			length = (result.Length + 1);//ANSII length == 1
@@ -193,11 +187,11 @@ namespace AlphaOmega.Debug
 		/// <returns>Bytes from index</returns>
 		public Byte[] GetBytes(UInt32 padding, UInt32 length)
 		{
-			if(padding + length > this.Buffer.Length)
+			if(padding + length > this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			Byte[] result = new Byte[length];
-			Array.Copy(this.Buffer, padding, result, 0, result.Length);
+			Array.Copy(this._buffer, padding, result, 0, result.Length);
 			return result;
 		}
 
