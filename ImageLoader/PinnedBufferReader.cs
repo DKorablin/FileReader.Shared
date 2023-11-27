@@ -69,13 +69,13 @@ namespace AlphaOmega.Debug
 				: (T)this.BytesToStructureI(padding, typeof(T));
 		}
 
-		/// <summary>banana banana banana</summary>
-		/// <param name="structType"></param>
-		/// <param name="padding"></param>
-		/// <param name="dataLength"></param>
-		/// <param name="exBytes"></param>
-		/// <returns></returns>
-		[Obsolete("Unknown method", true)]
+		/// <summary>Overlaying structure into an array of bytes and returns overflowed bytes</summary>
+		/// <remarks>Used in SystemFirmware project</remarks>
+		/// <param name="structType">Type of structure to map</param>
+		/// <param name="padding">Basic offset from beginning of the array</param>
+		/// <param name="dataLength">Length of current block from witch structure will extracted and extra bytes will be returned</param>
+		/// <param name="exBytes">Returned extra bytes</param>
+		/// <returns>returns mapped object &amp; extra bytes from current window</returns>
 		public Object BytesToStructure2(Type structType, UInt32 padding, UInt32 dataLength, out Byte[] exBytes)
 		{
 			UInt32 structLength = (UInt32)Marshal.SizeOf(structType);
