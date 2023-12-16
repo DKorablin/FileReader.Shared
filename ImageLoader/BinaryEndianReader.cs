@@ -13,9 +13,7 @@ namespace AlphaOmega.Debug
 		/// <param name="input">Byte input stream</param>
 		public BinaryEndianReader(Stream input, EndianHelper.Endian endianness)
 			: base(input)
-		{
-			this._endiannes = endianness;
-		}
+			=> this._endiannes = endianness;
 
 		/// <summary>Creates reader for specific byte endianness</summary>
 		/// <param name="endiannes">Big or Little endian</param>
@@ -23,10 +21,9 @@ namespace AlphaOmega.Debug
 		/// <returns>BinaryReader</returns>
 		public static BinaryReader CreateReader(EndianHelper.Endian endiannes, MemoryStream input)
 		{
-			if(BitConverter.IsLittleEndian == (endiannes == EndianHelper.Endian.Little))
-				return new BinaryReader(input);
-			else
-				return new BinaryEndianReader(input, endiannes);
+			return BitConverter.IsLittleEndian == (endiannes == EndianHelper.Endian.Little)
+				? new BinaryReader(input)
+				: new BinaryEndianReader(input, endiannes);
 		}
 
 		/// <summary>Reads decimal and swap bytes if needed</summary>

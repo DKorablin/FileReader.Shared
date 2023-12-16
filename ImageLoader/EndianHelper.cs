@@ -35,7 +35,7 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Get system default endiannesss</summary>
-		public static EndianHelper.Endian Endianness { get { return BitConverter.IsLittleEndian ? Endian.Little : Endian.Big; } }
+		public static EndianHelper.Endian Endianness => BitConverter.IsLittleEndian ? Endian.Little : Endian.Big;
 
 		internal static void AdjustEndianness(Type type, Byte[] data, EndianHelper.Endian endian, Int32 startOffset = 0)
 		{
