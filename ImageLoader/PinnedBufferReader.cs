@@ -8,28 +8,25 @@ namespace AlphaOmega.Debug
 	[DefaultProperty("Length")]
 	public class PinnedBufferReader : IDisposable
 	{
-		#region Fields
 		private GCHandle _gcHandle;
 		private IntPtr _gcPointer;
 		private readonly Byte[] _buffer;
-		#endregion Fields
-		#region Properties
+
 		/// <summary>Bytes array</summary>
-		private Byte[] Buffer { get { return this._buffer; } }
+		private Byte[] Buffer { get => this._buffer; }
 		
 		/// <summary>Allocated handle</summary>
-		private IntPtr Handle { get { return this._gcPointer; } }
+		private IntPtr Handle { get => this._gcPointer; }
 		
 		/// <summary>Read byte from buffer</summary>
 		/// <param name="index">Index in the buffer array</param>
 		/// <returns>One byte from the buffer</returns>
-		public Byte this[UInt32 index] { get { return this.Buffer[index]; } }
+		public Byte this[UInt32 index] { get => this.Buffer[index]; }
 
 		/// <summary>Length of the buffer</summary>
-		public Int32 Length { get { return this.Buffer.Length; } }
-		#endregion Properties
-		
-		/// <summary>Create instance of bytesreader class</summary>
+		public Int32 Length { get => this.Buffer.Length; }
+
+		/// <summary>Create instance of <see cref="PinnedBufferReader"/> class</summary>
 		/// <param name="buffer">Buffer</param>
 		public PinnedBufferReader(Byte[] buffer)
 		{
@@ -54,7 +51,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Overlaying structure into an array of bytes</summary>
 		/// <typeparam name="T">Mapped structure type</typeparam>
-		/// <param name="padding">Indent from the beginnning of the byte array</param>
+		/// <param name="padding">Indent from the beginning of the byte array</param>
 		/// <returns>Mapped structure with data</returns>
 		public T BytesToStructure<T>(UInt32 padding) where T : struct
 		{
@@ -87,7 +84,7 @@ namespace AlphaOmega.Debug
 		public Object BytesToStructure2(Type structType, UInt32 padding, UInt32 dataLength, out Byte[] exBytes)
 		{
 			UInt32 structLength = (UInt32)Marshal.SizeOf(structType);
-			Byte[] bytes = new Byte[structLength > dataLength ? structLength : dataLength];//Если брать массив меньше чем структура, то в хвост структуры запишется мусор
+			Byte[] bytes = new Byte[structLength > dataLength ? structLength : dataLength];//If you take an array smaller than the structure, then garbage will be written to the tail of the structure.
 			Array.Copy(this.Buffer, padding, bytes, 0, dataLength);
 			
 			using(PinnedBufferReader reader = new PinnedBufferReader(bytes))
@@ -147,7 +144,7 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Convets byte array to string</summary>
+		/// <summary>Converts byte array to string</summary>
 		/// <param name="padding">Indent from the beginning of the array</param>
 		/// <returns>Result string</returns>
 		public String BytesToStringAnsi(UInt32 padding)
@@ -156,9 +153,9 @@ namespace AlphaOmega.Debug
 			return this.BytesToStringAnsi(padding, out length);
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
-		/// <param name="padding">Отступ от начала массива, который после возврата станет отступом от конца строки</param>
-		/// <returns>Получаемая строка</returns>
+		/// <summary>Converting a byte array from padding to a string</summary>
+		/// <param name="padding">Padding from the beginning of the array, which after returning will become padding from the end of the string</param>
+		/// <returns>The resulting string</returns>
 		public String BytesToStringAnsi(ref UInt32 padding)
 		{
 			Int32 length;
@@ -167,11 +164,11 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Преобразование массива байт от отступа в строку</summary>
+		/// <summary>Converting a byte array from padding to a string</summary>
 		/// <param name="padding">Offset from the beginning of the array</param>
-		/// <param name="length">Результатирующий размер строки</param>
+		/// <param name="length">Resulting string size</param>
 		/// <exception cref="ArgumentOutOfRangeException">Bytes array is smaller than padding</exception>
-		/// <returns>Получаемая строка</returns>
+		/// <returns>Resulting string</returns>
 		public String BytesToStringAnsi(UInt32 padding, out Int32 length)
 		{
 			if(padding > this.Buffer.Length)
@@ -203,7 +200,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Overlaying a structure into an array of bytes and increasing the indentation by the size of the array</summary>
 		/// <typeparam name="T">Overlay structure type</typeparam>
-		/// <param name="buffer">An arry of bytes to apply the structure</param>
+		/// <param name="buffer">An array of bytes to apply the structure</param>
 		/// <param name="padding">Indent from the beginning of the byte array and indent from the beginning of the array + end of the structure</param>
 		/// <returns>Overlay structure with data</returns>
 		public static T BytesToStructure<T>(Byte[] buffer, ref UInt32 padding) where T : struct

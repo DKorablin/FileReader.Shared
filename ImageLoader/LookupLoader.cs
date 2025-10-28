@@ -27,7 +27,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Get structure from specific padding from the beginning of the image</summary>
 		/// <typeparam name="T">Structure type</typeparam>
 		/// <param name="padding">Padding from the beginning of the image</param>
-		/// <returns>Readed structure from image</returns>
+		/// <returns>Read structure from image</returns>
 		public override T PtrToStructure<T>(UInt32 padding)
 		{
 			T result = base.PtrToStructure<T>(padding);
@@ -38,7 +38,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Get bytes from specific padding and specific length</summary>
 		/// <param name="padding">Padding from the beginning of the image</param>
 		/// <param name="length">Length of bytes to read</param>
-		/// <returns>Readed bytes</returns>
+		/// <returns>Read bytes</returns>
 		public override Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
 			Byte[] result = base.ReadBytes(padding, length);
@@ -62,7 +62,7 @@ namespace AlphaOmega.Debug
 			return result;
 		}
 
-		/// <summary>Save to text file all data that was readed</summary>
+		/// <summary>Save to text file all data that was read</summary>
 		public new void Dispose()
 		{
 			File.WriteAllText(
@@ -72,11 +72,11 @@ namespace AlphaOmega.Debug
 			base.Dispose();
 		}
 
-		/// <summary>Получить уникальное наименование файла</summary>
-		/// <param name="path">Путь с наименованием файла</param>
-		/// /// <param name="extension">Расширение, которое добавляется к файлу</param>
-		/// <param name="index">Индекс наименования, если файл с таким наименованием уже существует</param>
-		/// <returns>Уникальное наимеование файла</returns>
+		/// <summary>Get a unique file name</summary>
+		/// <param name="path">Path with file name</param>
+		/// /// <param name="extension">Extension to add to the file</param>
+		/// <param name="index">Name index, if a file with that name already exists</param>
+		/// <returns>Unique file name</returns>
 		private static String GetFileUniqueName(String path, String extension, UInt32 index)
 		{
 			String filePath = index > 0

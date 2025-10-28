@@ -14,22 +14,21 @@ namespace AlphaOmega.Debug
 		private BinaryReader _reader;
 
 		/// <summary>File reader</summary>
-		private BinaryReader Reader { get { return this._reader; } }
+		private BinaryReader Reader { get => this._reader; }
 
 		/// <summary>Module mapped to memory</summary>
-		public Boolean IsModuleMapped { get { return false; } }
+		public Boolean IsModuleMapped { get => false; }
 
 		/// <summary>Base PE file address</summary>
-		public Int64 BaseAddress { get { return 0; } }
+		public Int64 BaseAddress { get => 0; }
 
 		/// <summary>Required endianness</summary>
 		public EndianHelper.Endian Endianness { get; set; }
 
 		/// <summary>Read image from stream</summary>
 		/// <param name="input">Stream with image</param>
-		/// <exception cref="ArgumentNullException">input stream is null</exception>
-		/// <exception cref="ArgumentNullException">souce is null</exception>
-		/// <exception cref="ArgumentException">stream must be seakable and readable</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="input"/> stream is null</exception>
+		/// <exception cref="ArgumentException">the stream must be searchable and readable</exception>
 		public StreamLoader(Stream input)
 		{
 			_ = input ?? throw new ArgumentNullException(nameof(input));
@@ -42,7 +41,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read PE image from file</summary>
 		/// <param name="filePath">Path to the file</param>
-		/// <exception cref="ArgumentNullException">filePath is null or empty string</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null or empty string</exception>
 		/// <exception cref="FileNotFoundException">file not found</exception>
 		/// <returns>PE loader</returns>
 		public static StreamLoader FromFile(String filePath)
@@ -73,7 +72,7 @@ namespace AlphaOmega.Debug
 		/// <param name="padding">Padding from the beginning of the image</param>
 		/// <param name="length">Length of bytes to read</param>
 		/// <exception cref="ArgumentOutOfRangeException">padding + length more than size of image</exception>
-		/// <returns>Readed bytes</returns>
+		/// <returns>Read bytes</returns>
 		public virtual Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
 			Stream stream = this.Reader.BaseStream;
@@ -87,7 +86,7 @@ namespace AlphaOmega.Debug
 		/// <summary>Get structure from specific padding from the beginning of the image</summary>
 		/// <typeparam name="T">Structure type</typeparam>
 		/// <param name="padding">Padding from the beginning of the image</param>
-		/// <returns>Readed structure from image</returns>
+		/// <returns>Read structure from image</returns>
 		public virtual T PtrToStructure<T>(UInt32 padding) where T : struct
 		{
 			Byte[] bytes = this.ReadBytes(padding, (UInt32)Marshal.SizeOf(typeof(T)));
