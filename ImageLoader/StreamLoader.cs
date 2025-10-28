@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,20 +13,22 @@ namespace AlphaOmega.Debug
 	{
 		private BinaryReader _reader;
 
+		/// <summary>File reader</summary>
+		private BinaryReader Reader { get => this._reader; }
+
 		/// <summary>Module mapped to memory</summary>
-		public Boolean IsModuleMapped => false;
+		public Boolean IsModuleMapped { get => false; }
 
 		/// <summary>Base PE file address</summary>
-		public Int64 BaseAddress => 0;
+		public Int64 BaseAddress { get => 0; }
 
 		/// <summary>Required endianness</summary>
 		public EndianHelper.Endian Endianness { get; set; }
 
 		/// <summary>Read image from stream</summary>
 		/// <param name="input">Stream with image</param>
-		/// <exception cref="ArgumentNullException">input stream is null</exception>
-		/// <exception cref="ArgumentNullException">souce is null</exception>
-		/// <exception cref="ArgumentException">stream must be seakable and readable</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="input"/> stream is null</exception>
+		/// <exception cref="ArgumentException">the stream must be searchable and readable</exception>
 		public StreamLoader(Stream input)
 		{
 			_ = input ?? throw new ArgumentNullException(nameof(input));
@@ -37,7 +41,7 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read PE image from file</summary>
 		/// <param name="filePath">Path to the file</param>
-		/// <exception cref="ArgumentNullException">filePath is null or empty string</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null or empty string</exception>
 		/// <exception cref="FileNotFoundException">file not found</exception>
 		/// <returns>PE loader</returns>
 		public static StreamLoader FromFile(String filePath)
@@ -47,14 +51,15 @@ namespace AlphaOmega.Debug
 			else if(!File.Exists(filePath))
 				throw new FileNotFoundException("File not found", filePath);
 
-			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+			FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			return new StreamLoader(stream);
 		}
 
 		/// <summary>Read PE image from memory</summary>
 		/// <param name="input">Array of bytes</param>
+		/// <param name="sourceName">Custom source name</param>
 		/// <returns>PE loader</returns>
-		public static StreamLoader FromMemory(Byte[] input)
+		public static StreamLoader FromMemory(Byte[] input, String sourceName)
 		{
 			if(input == null || input.Length == 0)
 				throw new ArgumentNullException(nameof(input));
@@ -67,21 +72,21 @@ namespace AlphaOmega.Debug
 		/// <param name="padding">Padding from the beginning of the image</param>
 		/// <param name="length">Length of bytes to read</param>
 		/// <exception cref="ArgumentOutOfRangeException">padding + length more than size of image</exception>
-		/// <returns>Readed bytes</returns>
+		/// <returns>Read bytes</returns>
 		public virtual Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
-			Stream stream = this._reader.BaseStream;
+			Stream stream = this.Reader.BaseStream;
 			if(padding + length > stream.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
-			return this._reader.ReadBytes((Int32)length);
+			return this.Reader.ReadBytes((Int32)length);
 		}
 
 		/// <summary>Get structure from specific padding from the beginning of the image</summary>
 		/// <typeparam name="T">Structure type</typeparam>
 		/// <param name="padding">Padding from the beginning of the image</param>
-		/// <returns>Readed structure from image</returns>
+		/// <returns>Read structure from image</returns>
 		public virtual T PtrToStructure<T>(UInt32 padding) where T : struct
 		{
 			Byte[] bytes = this.ReadBytes(padding, (UInt32)Marshal.SizeOf(typeof(T)));
@@ -104,18 +109,18 @@ namespace AlphaOmega.Debug
 		/// <returns>String from pointer</returns>
 		public virtual String PtrToStringAnsi(UInt32 padding)
 		{
-			Stream stream = this._reader.BaseStream;
+			Stream stream = this.Reader.BaseStream;
 			if(padding > stream.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
 			List<Byte> result = new List<Byte>();
 
-			Byte b = this._reader.ReadByte();
+			Byte b = this.Reader.ReadByte();
 			while(b != 0x00)
 			{
 				result.Add(b);
-				b = this._reader.ReadByte();
+				b = this.Reader.ReadByte();
 			}
 			return Encoding.ASCII.GetString(result.ToArray());
 		}
