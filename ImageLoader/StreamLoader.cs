@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,10 +9,8 @@ namespace AlphaOmega.Debug
 	/// <summary>Image loader from file or stream</summary>
 	public class StreamLoader : IDisposable, IImageLoader
 	{
-		private BinaryReader _reader;
-
 		/// <summary>File reader</summary>
-		private BinaryReader Reader { get => this._reader; }
+		private BinaryReader _reader;
 
 		/// <summary>Module mapped to memory</summary>
 		public Boolean IsModuleMapped { get => false; }
@@ -75,12 +71,12 @@ namespace AlphaOmega.Debug
 		/// <returns>Read bytes</returns>
 		public virtual Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
-			Stream stream = this.Reader.BaseStream;
+			Stream stream = this._reader.BaseStream;
 			if(padding + length > stream.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
-			return this.Reader.ReadBytes((Int32)length);
+			return this._reader.ReadBytes((Int32)length);
 		}
 
 		/// <summary>Get structure from specific padding from the beginning of the image</summary>
@@ -109,7 +105,7 @@ namespace AlphaOmega.Debug
 		/// <returns>String from pointer</returns>
 		public virtual String PtrToStringAnsi(UInt32 padding)
 		{
-			Stream stream = this.Reader.BaseStream;
+			Stream stream = this._reader.BaseStream;
 			if(padding > stream.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
@@ -120,7 +116,7 @@ namespace AlphaOmega.Debug
 			while(b != 0x00)
 			{
 				result.Add(b);
-				b = this.Reader.ReadByte();
+				b = this._reader.ReadByte();
 			}
 			return Encoding.ASCII.GetString(result.ToArray());
 		}
