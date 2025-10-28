@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace AlphaOmega.Debug
 {
@@ -16,18 +16,18 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Gets structure from specific offset</summary>
 		/// <typeparam name="T">Structure type</typeparam>
-		/// <param name="padding">Offest from beginig of a file or RVA</param>
+		/// <param name="padding">Offset from beginning of a file or RVA</param>
 		/// <returns>Structure from specified offset</returns>
 		T PtrToStructure<T>(UInt32 padding) where T : struct;
 
-		/// <summary>Gets byte array from beggining of the offset</summary>
-		/// <param name="padding">Offset from beggining of a file or RVA</param>
+		/// <summary>Gets byte array from beginning of the offset</summary>
+		/// <param name="padding">Offset from beginning of a file or RVA</param>
 		/// <param name="length">Required length</param>
 		/// <returns>Byte array from offset and required length</returns>
 		Byte[] ReadBytes(UInt32 padding, UInt32 length);
 
 		/// <summary>Gets string from fixed offset</summary>
-		/// <param name="padding">Offset from beggining of a file or RVA</param>
+		/// <param name="padding">Offset from beginning of a file or RVA</param>
 		/// <returns>String from the offset</returns>
 		String PtrToStringAnsi(UInt32 padding);
 	}
