@@ -112,7 +112,7 @@ namespace AlphaOmega.Debug
 			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
 			List<Byte> result = new List<Byte>();
 
-			Byte b = this.Reader.ReadByte();
+			Byte b = this._reader.ReadByte();
 			while(b != 0x00)
 			{
 				result.Add(b);
