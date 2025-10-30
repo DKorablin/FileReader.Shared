@@ -53,7 +53,6 @@ namespace AlphaOmega.Debug
 
 		/// <summary>Read PE image from memory</summary>
 		/// <param name="input">Array of bytes</param>
-		/// <param name="sourceName">Custom source name</param>
 		/// <returns>PE loader</returns>
 		public static StreamLoader FromMemory(Byte[] input)
 		{
