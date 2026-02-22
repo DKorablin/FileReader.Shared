@@ -7,7 +7,7 @@ using System.Text;
 namespace AlphaOmega.Debug
 {
 	/// <summary>Image loader from file or stream</summary>
-	public class StreamLoader : IDisposable, IImageLoader
+	public class StreamLoader : IImageLoader
 	{
 		/// <summary>File reader</summary>
 		private BinaryReader _reader;
