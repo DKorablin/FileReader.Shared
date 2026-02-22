@@ -9,16 +9,18 @@ namespace AlphaOmega.Debug
 	/// <summary>Image loader from file or stream</summary>
 	public class StreamLoader : IImageLoader
 	{
-		/// <summary>File reader</summary>
 		private BinaryReader _reader;
 
-		/// <summary>Module mapped to memory</summary>
-		public Boolean IsModuleMapped { get => false; }
+		/// <inheritdoc/>
+		Boolean IImageLoader.IsModuleMapped { get => false; }
 
-		/// <summary>Base PE file address</summary>
-		public Int64 BaseAddress { get => 0; }
+		// <inheritdoc/>
+		Int64 IImageLoader.BaseAddress { get => 0; }
 
-		/// <summary>Required endianness</summary>
+		/// <inheritdoc/>
+		Int64 IImageLoader.Length { get => this._reader.BaseStream.Length; }
+
+		/// <inheritdoc/>
 		public EndianHelper.Endian Endianness { get; set; }
 
 		/// <summary>Read image from stream</summary>
@@ -35,7 +37,7 @@ namespace AlphaOmega.Debug
 			this._reader = new BinaryReader(input);
 		}
 
-		/// <summary>Read PE image from file</summary>
+		/// <summary>Read image from file</summary>
 		/// <param name="filePath">Path to the file</param>
 		/// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null or empty string</exception>
 		/// <exception cref="FileNotFoundException">file not found</exception>
