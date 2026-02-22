@@ -2,10 +2,10 @@
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Basic row for the strongly typed generic row</summary>
+	/// <summary>Represents a base contract for strongly-typed rows that wrap a generic row implementation.</summary>
 	public interface IBaseRow
 	{
-		/// <summary>Generic interface row</summary>
+		/// <summary>Gets the underlying generic <see cref="IRow"/> instance.</summary>
 		IRow Row { get; }
 	}
 }

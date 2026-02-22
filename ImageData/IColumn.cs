@@ -2,13 +2,13 @@
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Generic column for dynamic structures</summary>
+	/// <summary>Defines the metadata for a column within a dynamic structure.</summary>
 	public interface IColumn
 	{
-		/// <summary>Name of the column. From CONSTANT structures</summary>
+		/// <summary>Gets the name of the column as defined in the constant metadata structures.</summary>
 		String Name { get; }
 
-		/// <summary>Zero based index from the beginning of structure</summary>
+		/// <summary>Gets the zero-based index of this column within its parent table.</summary>
 		UInt16 Index { get; }
 	}
 }
