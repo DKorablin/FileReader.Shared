@@ -2,16 +2,16 @@
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Generic cell for dynamic structures</summary>
+	/// <summary>Represents an individual data cell within a dynamic structure row.</summary>
 	public interface ICell
 	{
-		/// <summary>Abstract value stored in the column</summary>
+		/// <summary>Gets the interpreted value stored in the cell (e.g., a string, structure, or pointer).</summary>
 		Object Value { get; }
 
-		/// <summary>Here can be cell value or value length or ondes to the different table</summary>
+		/// <summary>Gets the raw numerical value of the cell, which may represent a literal value, a length, or a physical index into another table.</summary>
 		UInt32 RawValue { get; }
 
-		/// <summary>Description of the column owner</summary>
+		/// <summary>Gets the <see cref="IColumn"/> metadata that defines this cell.</summary>
 		IColumn Column { get; }
 	}
 }

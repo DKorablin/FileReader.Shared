@@ -2,20 +2,20 @@
 
 namespace AlphaOmega.Debug
 {
-	/// <summary>Reference to the generic table</summary>
+	/// <summary>Represents a pointer or reference to a specific row within a dynamic table collection.</summary>
 	public interface IRowPointer
 	{
-		/// <summary>Owner table collection</summary>
+		/// <summary>Gets the root collection containing the target table.</summary>
 		ITables Root { get; }
 
-		/// <summary>Reference type</summary>
+		/// <summary>Gets the identifier or type of the target table.</summary>
 		Object TableType { get; }
 
-		/// <summary>Reference index</summary>
+		/// <summary>Gets the index of the row being referenced.</summary>
 		UInt32 Index { get; }
 
-		/// <summary>Gets the generic row reference</summary>
-		/// <returns>Reference row</returns>
+		/// <summary>Resolves the reference and returns the corresponding <see cref="IRow"/>.</summary>
+		/// <returns>The referenced <see cref="IRow"/> instance.</returns>
 		IRow GetReference();
 	}
 }

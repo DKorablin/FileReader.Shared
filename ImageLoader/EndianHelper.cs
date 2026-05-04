@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -34,8 +34,8 @@ namespace AlphaOmega.Debug
 			Little,
 		}
 
-		/// <summary>Get system default endiannesss</summary>
-		public static EndianHelper.Endian Endianness => BitConverter.IsLittleEndian ? Endian.Little : Endian.Big;
+		/// <summary>Get system default endianness</summary>
+		public static EndianHelper.Endian Endianness { get { return BitConverter.IsLittleEndian ? Endian.Little : Endian.Big; } }
 
 		internal static void AdjustEndianness(Type type, Byte[] data, EndianHelper.Endian endian, Int32 startOffset = 0)
 		{
