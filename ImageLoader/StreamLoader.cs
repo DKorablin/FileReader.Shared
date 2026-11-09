@@ -76,14 +76,21 @@ namespace AlphaOmega.Debug
 		/// <param name="length">The number of bytes to retrieve.</param>
 		/// <returns>An array containing the requested bytes.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the requested range exceeds the stream length.</exception>
+		/// <exception cref="EndOfStreamException">Thrown if the stream returned less data than requested.</exception>
 		public virtual Byte[] ReadBytes(UInt32 padding, UInt32 length)
 		{
 			Stream stream = this._reader.BaseStream;
-			if(padding + length > stream.Length)
+			//64-bit arithmetic: padding + length can't wrap around (UInt32 sum could overflow and pass the check)
+			if((UInt64)padding + length > (UInt64)stream.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
+			if(length > Int32.MaxValue)
+				throw new ArgumentOutOfRangeException(nameof(length));
 
-			stream.Seek(checked((Int64)padding), SeekOrigin.Begin);
-			return this._reader.ReadBytes((Int32)length);
+			stream.Seek(padding, SeekOrigin.Begin);
+			Byte[] result = this._reader.ReadBytes((Int32)length);
+			if(result.Length != length)//Callers (e.g. PtrToStructure) rely on getting exactly the requested number of bytes
+				throw new EndOfStreamException();
+			return result;
 		}
 
 		/// <summary>Reads a structure of type <typeparamref name="T"/> from the stream at the specified file offset.</summary>

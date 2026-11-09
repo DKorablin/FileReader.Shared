@@ -91,13 +91,15 @@ namespace AlphaOmega.Debug
 		}
 
 		private Object BytesToStructureI(UInt32 padding, Type structType)
-		{
-			IntPtr ptr = padding == 0
+			=> Marshal.PtrToStructure(this.GetPointer(padding), structType);
+
+		/// <summary>Gets the address of the byte at the specified offset in the pinned buffer.</summary>
+		/// <param name="padding">The offset from the beginning of the buffer.</param>
+		/// <returns>Pointer to the buffer data.</returns>
+		private IntPtr GetPointer(UInt32 padding)
+			=> padding == 0
 				? this._gcPointer
 				: new IntPtr(this._gcPointer.ToInt64() + padding);
-
-			return Marshal.PtrToStructure(ptr, structType);
-		}
 
 		/// <summary>Reads a Unicode string from the buffer at the specified offset.</summary>
 		/// <param name="padding">The offset from the beginning of the buffer.</param>
@@ -116,21 +118,25 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads a Unicode string from the buffer and returns its length in bytes.</summary>
+		/// <remarks>The string is never read past the end of the buffer. If there is no null terminator, the string ends at the end of the buffer.</remarks>
 		/// <param name="padding">The offset from the beginning of the buffer.</param>
-		/// <param name="length">The total length of the string in bytes, including the null terminator.</param>
+		/// <param name="length">The total length of the string in bytes, including the null terminator (if present).</param>
 		/// <returns>The decoded string.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the offset is beyond the buffer length.</exception>
 		public String BytesToStringUni(UInt32 padding, out Int32 length)
 		{
-			if(padding > this._buffer.Length)
+			if(padding >= this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
-			IntPtr ptr = padding == 0
-				? this._gcPointer
-				: new IntPtr(this._gcPointer.ToInt64() + padding);
+			const Int32 SizeOfChar = sizeof(Char);//UTF-16 code unit
+			Int32 start = (Int32)padding;
+			Int32 end = start;
+			while(end + SizeOfChar <= this._buffer.Length && (this._buffer[end] != 0 || this._buffer[end + 1] != 0))
+				end += SizeOfChar;
+			Boolean isTerminated = end + SizeOfChar <= this._buffer.Length;
 
-			String result = Marshal.PtrToStringUni(ptr);
-			length = (result.Length + 1) * Marshal.SystemDefaultCharSize;
+			String result = Marshal.PtrToStringUni(this.GetPointer(padding), (end - start) / SizeOfChar);
+			length = end - start + (isTerminated ? SizeOfChar : 0);
 			return result;
 		}
 
@@ -151,21 +157,24 @@ namespace AlphaOmega.Debug
 		}
 
 		/// <summary>Reads an ANSI string from the buffer and returns its length in bytes.</summary>
+		/// <remarks>The string is never read past the end of the buffer. If there is no null terminator, the string ends at the end of the buffer.</remarks>
 		/// <param name="padding">The offset from the beginning of the buffer.</param>
-		/// <param name="length">The total length of the string in bytes, including the null terminator.</param>
+		/// <param name="length">The total length of the string in bytes, including the null terminator (if present).</param>
 		/// <returns>The decoded string.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the offset is beyond the buffer length.</exception>
 		public String BytesToStringAnsi(UInt32 padding, out Int32 length)
 		{
-			if(padding > this._buffer.Length)
+			if(padding >= this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
-			IntPtr ptr = padding == 0
-				? this._gcPointer
-				: new IntPtr(this._gcPointer.ToInt64() + padding);
+			Int32 start = (Int32)padding;
+			Int32 end = Array.IndexOf(this._buffer, (Byte)0, start);
+			Boolean isTerminated = end >= 0;
+			if(!isTerminated)
+				end = this._buffer.Length;
 
-			String result = Marshal.PtrToStringAnsi(ptr);
-			length = (result.Length + 1);//ANSII length == 1
+			String result = Marshal.PtrToStringAnsi(this.GetPointer(padding), end - start);
+			length = end - start + (isTerminated ? 1 : 0);//In bytes. A multi-byte (DBCS/UTF-8) string has more bytes than characters
 			return result;
 		}
 
@@ -176,7 +185,8 @@ namespace AlphaOmega.Debug
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if the requested range is outside the buffer.</exception>
 		public Byte[] GetBytes(UInt32 padding, UInt32 length)
 		{
-			if(padding + length > this._buffer.Length)
+			//64-bit arithmetic: padding + length can't wrap around (UInt32 sum could overflow and pass the check)
+			if((UInt64)padding + length > (UInt64)this._buffer.Length)
 				throw new ArgumentOutOfRangeException(nameof(padding));
 
 			Byte[] result = new Byte[length];
